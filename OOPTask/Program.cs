@@ -16,6 +16,9 @@ class Program
         LocalizedBook localizedBook = new LocalizedBook { Number = "LB001", ISBN = "ISBN002", Title = "Localized Book 1", Authors = "Author 3", NumberOfPages = 250, Publisher = "Publisher 2", DatePublished = DateTime.Now, OriginalPublisher = "Original Publisher", CountryOfLocalization = "Country", LocalPublisher = "Local Publisher" };
         documentStorage.SaveDocument(localizedBook);
 
+        Magazine magazine = new Magazine { Number = "M001", Title = "Magazine 1", Publisher = "Publisher X", ReleaseNumber = 1, PublishDate = DateTime.Now };
+        documentStorage.SaveDocument(magazine);
+
 
         Console.WriteLine("What are we looking?");
         List<IDocument> searchResults = documentStorage.SearchByDocumentNumber(Console.ReadLine());

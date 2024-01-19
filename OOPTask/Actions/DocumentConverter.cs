@@ -19,6 +19,8 @@ namespace OOPTask.Actions
                     return jsonObject.ToObject<Book>();
                 case nameof(LocalizedBook):
                     return jsonObject.ToObject<LocalizedBook>();
+                case nameof(Magazine):
+                    return jsonObject.ToObject<Magazine>();
                 default:
                     throw new InvalidOperationException($"Unexpected document type: {typeName}");
             }
