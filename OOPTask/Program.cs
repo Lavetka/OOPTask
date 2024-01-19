@@ -1,4 +1,5 @@
 ﻿using OOPTask.Actions;
+using OOPTask.Actions.Interfaces;
 using OOPTask.Entities;
 
 class Program
@@ -6,6 +7,12 @@ class Program
     static void Main()
     {
         IDocumentStorage documentStorage = new FileRepositoryStorage();
+
+        IDocumentCache documentCache = new DocumentCache();
+        var cacheConfig = new DocumentCacheConfig();
+        cacheConfig.SetCacheTime(typeof(Patent), TimeSpan.FromDays(1));
+        IDocumentStorage storageWithCache = new DocumentStorageWithCache(documentStorage, documentCache, cacheConfig);
+
 
         Patent patent = new Patent { Number = "P001", Title = "Patent 1", Authors = "Author 1", DatePublished = DateTime.Now, ExpirationDate = DateTime.Now.AddYears(10), UniqueId = "U001" };
         documentStorage.SaveDocument(patent);
@@ -21,10 +28,23 @@ class Program
 
 
         Console.WriteLine("What are we looking?");
-        List<IDocument> searchResults = documentStorage.SearchByDocumentNumber(Console.ReadLine());
+        List<IDocument> searchResults = storageWithCache.SearchByDocumentNumber(Console.ReadLine());
 
         Console.WriteLine("Search Results:");
         foreach (IDocument result in searchResults)
+        {
+            Console.WriteLine($"{result.GetType().Name} - {result.Number}");
+            foreach (var property in result.GetType().GetProperties())
+            {
+                Console.WriteLine($"{property.Name}: {property.GetValue(result)}");
+            }
+        }
+
+        Console.WriteLine("What are we looking?");
+        List<IDocument> searchResultss = storageWithCache.SearchByDocumentNumber(Console.ReadLine());
+
+        Console.WriteLine("Search Results:");
+        foreach (IDocument result in searchResultss)
         {
             Console.WriteLine($"{result.GetType().Name} - {result.Number}");
             foreach (var property in result.GetType().GetProperties())
